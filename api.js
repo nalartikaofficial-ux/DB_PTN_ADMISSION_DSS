@@ -3,7 +3,7 @@
  */
 const ApiService = {
   // Ganti URL deployment Google Apps Script di sini
-  BASE_URL: "https://script.google.com/macros/s/AKfycbz_SAMPLE_DEPLOYMENT_ID/exec",
+  BASE_URL:"https://script.google.com/macros/s/AKfycbwmLIM9QsJurBedF9QggKsl0-lEOZqpPHFWsx4I4ysmpW2NTwZi_uvrATpLkuVVHZpF/exec",
 
   get: async function(action, params = {}) {
     const url = new URL(this.BASE_URL);
