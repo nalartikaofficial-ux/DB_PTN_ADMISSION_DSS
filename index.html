@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PTN Admission Decision Support System</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <span class="brand-badge">DSS 2026</span>
+        <h1>PTN Admission Decision Support System</h1>
+      </div>
+      <div class="header-actions">
+        <button id="btn-load-draft" class="btn btn-secondary">Buka Draf</button>
+        <button id="btn-save-draft" class="btn btn-secondary">Simpan Draf</button>
+        <button id="btn-print" class="btn btn-primary">Cetak Laporan</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-layout">
+    <!-- Feedback & Notification Banner -->
+    <div id="status-banner" class="status-banner hidden" role="alert"></div>
+
+    <!-- Student Profile Section -->
+    <section class="card" aria-labelledby="heading-student">
+      <div class="card-header">
+        <h2 id="heading-student">1. Profil Siswa & Verifikasi Sekolah</h2>
+      </div>
+      <div class="card-body">
+        <form id="form-student" class="form-grid">
+          <div class="form-group">
+            <label for="nama" class="required">Nama Lengkap Siswa</label>
+            <input type="text" id="nama" name="nama" required placeholder="Sesuai NISN/KTP">
+          </div>
+          <div class="form-group">
+            <label for="nis">Nomor Induk Siswa (NIS)</label>
+            <input type="text" id="nis" name="nis" placeholder="Nomor registrasi">
+          </div>
+          <div class="form-group">
+            <label for="kelas" class="required">Kelas / Rombel</label>
+            <input type="text" id="kelas" name="kelas" required placeholder="Contoh: XII - MIPA 1">
+          </div>
+          <div class="form-group">
+            <label for="jurusan" class="required">Rumpun Jurusan</label>
+            <select id="jurusan" name="jurusan" required>
+              <option value="">Pilih Jurusan</option>
+              <option value="MIPA">MIPA / SAINTEK</option>
+              <option value="IPS">IPS / SOSHUM</option>
+              <option value="BAHASA">BAHASA</option>
+              <option value="UMUM">UMUM (Kurikulum Merdeka)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="ranking">Peringkat Eligible</label>
+            <input type="number" id="ranking" name="ranking" min="1" placeholder="Peringkat">
+          </div>
+          <div class="form-group">
+            <label for="total_siswa">Total Siswa Jurusan</label>
+            <input type="number" id="total_siswa" name="total_siswa" min="1" placeholder="Populasi angkatan">
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Selection Pathway Tabs -->
+    <nav class="pathway-tabs" aria-label="Jalur Seleksi">
+      <button class="tab-btn active" data-tab="tab-snbp">Jalur SNBP (Prestasi Rapor)</button>
+      <button class="tab-btn" data-tab="tab-snbt">Jalur SNBT (UTBK Multi-TO)</button>
+      <button class="tab-btn" data-tab="tab-mandiri">Jalur Seleksi Mandiri</button>
+    </nav>
+
+    <!-- Tab Content: SNBP -->
+    <section id="tab-snbp" class="tab-pane active" aria-labelledby="heading-snbp">
+      <div class="card">
+        <div class="card-header flex-between">
+          <h2 id="heading-snbp">Catatan Nilai Rapor (Semester 1–5)</h2>
+          <button type="button" id="btn-add-mapel" class="btn btn-sm btn-secondary">+ Tambah Mapel</button>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="data-table" id="table-grades">
+              <thead>
+                <tr>
+                  <th>Mata Pelajaran</th>
+                  <th>Sem 1</th>
+                  <th>Sem 2</th>
+                  <th>Sem 3</th>
+                  <th>Sem 4</th>
+                  <th>Sem 5</th>
+                  <th>Rata-rata</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-grades">
+                <!-- Dynamic Content via grades.js -->
+              </tbody>
+            </table>
+          </div>
+          <div class="analytics-summary-box" id="grades-summary">
+            <p>Rata-rata Keseluruhan: <strong id="summary-grand-avg">-</strong> | Status Tren Akademik: <strong id="summary-trend-status">Memerlukan Data</strong></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab Content: SNBT -->
+    <section id="tab-snbt" class="tab-pane hidden" aria-labelledby="heading-snbt">
+      <div class="card">
+        <div class="card-header">
+          <h2 id="heading-snbt">Evaluasi Subtes Try Out UTBK (Multi-TO)</h2>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="data-table" id="table-utbk">
+              <thead>
+                <tr>
+                  <th>Komponen Subtes</th>
+                  <th>TO 1</th>
+                  <th>TO 2</th>
+                  <th>TO 3</th>
+                  <th>Rata-rata</th>
+                  <th>Trajektori</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-utbk">
+                <!-- Dynamic Content via snbt.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab Content: Mandiri -->
+    <section id="tab-mandiri" class="tab-pane hidden" aria-labelledby="heading-mandiri">
+      <div class="card">
+        <div class="card-header">
+          <h2 id="heading-mandiri">Skema & Konfigurasi Mandiri PTN</h2>
+        </div>
+        <div class="card-body">
+          <p class="text-muted">Komponen seleksi mandiri disinkronkan otomatis sesuai parameter dan bobot PTN tujuan.</p>
+          <div id="mandiri-program-details" class="details-box">Pilih program studi tujuan terlebih dahulu.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Target Program Selection & Smart Recommendation -->
+    <section class="card" aria-labelledby="heading-targets">
+      <div class="card-header">
+        <h2 id="heading-targets">2. Pilihan Program Studi & Analisis Rekomendasi</h2>
+      </div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="select-target-1" class="required">Pilihan 1 (Prioritas Utama)</label>
+            <select id="select-target-1" required>
+              <option value="">Memuat program studi...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="select-target-2">Pilihan 2 (Alternatif)</label>
+            <select id="select-target-2">
+              <option value="">Pilih Program Alternatif</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" id="btn-run-analysis" class="btn btn-primary btn-block">Jalankan Analisis Rekomendasi</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results & Recommendation Card Output -->
+    <section id="section-results" class="results-container hidden" aria-labelledby="heading-results">
+      <h2 id="heading-results" class="section-title">Hasil Rekomendasi & Decision Support Matrix</h2>
+      <div id="cards-recommendation-container" class="cards-grid">
+        <!-- Rendered via recommendation.js -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>PTN Admission DSS &copy; 2026. Analisis sistem merupakan instrumen pendukung keputusan berdasarkan data empiris yang tersedia dan bukan jaminan kelulusan mutlak.</p>
+  </footer>
+
+  <!-- Modular Scripts -->
+  <script src="js/state.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/validation.js"></script>
+  <script src="js/grades.js"></script>
+  <script src="js/snbt.js"></script>
+  <script src="js/mandiri.js"></script>
+  <script src="js/recommendation.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
